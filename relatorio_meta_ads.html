@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Meta Ads — Fabricio Moura | Mar/2026</title>
+<style>
+  :root {
+    --blue: #1877F2;
+    --blue-dark: #0a5dc2;
+    --green: #00c48c;
+    --red: #ff4d4f;
+    --orange: #fa8c16;
+    --yellow: #fadb14;
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --text: #1c1e21;
+    --muted: #65676b;
+    --border: #dde1e7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #1877F2 0%, #0a5dc2 100%); color: #fff; padding: 32px 40px; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .header h1 { font-size: 28px; font-weight: 700; }
+  .header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+  .badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); border-radius: 20px; padding: 5px 14px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+  .badge::before { content: '●'; color: #00ff88; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .period { font-size: 13px; opacity: 0.8; margin-top: 8px; }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* KPI CARDS */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .kpi { background: var(--card); border-radius: 12px; padding: 20px; border-left: 4px solid var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .kpi.green { border-left-color: var(--green); }
+  .kpi.orange { border-left-color: var(--orange); }
+  .kpi.red { border-left-color: var(--red); }
+  .kpi-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .kpi-value { font-size: 26px; font-weight: 700; color: var(--text); margin-top: 6px; }
+  .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* SECTIONS */
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .section-title span { font-size: 22px; }
+
+  /* ACCOUNT LABEL */
+  .account-label { font-size: 12px; font-weight: 600; color: var(--blue); background: #e7f0fd; border-radius: 6px; padding: 3px 10px; display: inline-block; margin-bottom: 10px; }
+
+  /* TABLES */
+  .table-wrap { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { background: #f7f8fa; color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.4px; padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 14px; border-bottom: 1px solid #f0f2f5; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbfc; }
+  .camp-name { font-weight: 600; max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* PILLS */
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .pill-green { background: #e6f9f3; color: #00875a; }
+  .pill-blue { background: #e7f0fd; color: #1877F2; }
+  .pill-orange { background: #fff4e5; color: #d46b08; }
+  .pill-red { background: #fff1f0; color: #cf1322; }
+  .pill-gray { background: #f0f2f5; color: #65676b; }
+
+  /* SCORE BARS */
+  .bar-wrap { width: 80px; display: inline-block; vertical-align: middle; }
+  .bar-bg { background: #eee; border-radius: 4px; height: 6px; }
+  .bar-fill { height: 6px; border-radius: 4px; }
+  .bar-green { background: var(--green); }
+  .bar-orange { background: var(--orange); }
+  .bar-red { background: var(--red); }
+
+  /* ALERTS */
+  .alert { border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; font-size: 14px; line-height: 1.5; display: flex; gap: 12px; align-items: flex-start; }
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert-red { background: #fff1f0; border: 1px solid #ffccc7; }
+  .alert-orange { background: #fff7e6; border: 1px solid #ffd591; }
+  .alert-green { background: #f6ffed; border: 1px solid #b7eb8f; }
+  .alert-blue { background: #e6f4ff; border: 1px solid #91d5ff; }
+  .alert strong { display: block; font-weight: 700; margin-bottom: 2px; }
+
+  /* RECOMMENDATIONS */
+  .rec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+  .rec-card { background: var(--card); border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 3px solid; }
+  .rec-card.critical { border-top-color: var(--red); }
+  .rec-card.warning { border-top-color: var(--orange); }
+  .rec-card.positive { border-top-color: var(--green); }
+  .rec-card.info { border-top-color: var(--blue); }
+  .rec-priority { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .priority-critical { color: var(--red); }
+  .priority-warning { color: var(--orange); }
+  .priority-positive { color: var(--green); }
+  .priority-info { color: var(--blue); }
+  .rec-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .rec-body { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+  .rec-body ul { margin-left: 16px; margin-top: 6px; }
+  .rec-body li { margin-bottom: 4px; }
+
+  /* HIGHLIGHT */
+  .highlight { font-weight: 700; }
+  .green-text { color: #00875a; }
+  .red-text { color: var(--red); }
+  .orange-text { color: #d46b08; }
+  .blue-text { color: var(--blue); }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>📊 Relatório Meta Ads</h1>
+      <p>Fabricio Moura — Análise de Desempenho & Otimização</p>
+      <p class="period">📅 Período: 01/02/2026 – 06/03/2026 &nbsp;|&nbsp; Gerado em 06/03/2026</p>
+    </div>
+    <div>
+      <div class="badge">Conectado via API</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI GERAL -->
+  <div class="section">
+    <div class="section-title"><span>💰</span> Visão Geral — Todas as Contas</div>
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Gasto Total</div>
+        <div class="kpi-value">R$5.925</div>
+        <div class="kpi-sub">2 contas ativas</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">Total de Impressões</div>
+        <div class="kpi-value">1,33M</div>
+        <div class="kpi-sub">Todas as campanhas</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Total de Cliques</div>
+        <div class="kpi-value">108.916</div>
+        <div class="kpi-sub">link_clicks combinados</div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-label">CPM Médio</div>
+        <div class="kpi-value">R$6,17</div>
+        <div class="kpi-sub">Varia: R$1,71–R$13,59</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">Melhor CTR</div>
+        <div class="kpi-value">16,46%</div>
+        <div class="kpi-sub">GDx — "Nem tudo..."</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Pior CPL (leads)</div>
+        <div class="kpi-value">R$135,40</div>
+        <div class="kpi-sub">Campanha LP Leads</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTAS PRIORITÁRIOS -->
+  <div class="section">
+    <div class="section-title"><span>🚨</span> Alertas Prioritários</div>
+
+    <div class="alert alert-red">
+      <div class="alert-icon">🔴</div>
+      <div><strong>CRÍTICO — CPL altíssimo na campanha de Leads (R$135,40/lead)</strong>
+      R$812,38 gastos para captar apenas 6 leads via pixel. A frequência está em 2,80 (audiência saturada). Pausar ou reformular com urgência.</div>
+    </div>
+
+    <div class="alert alert-red">
+      <div class="alert-icon">🔴</div>
+      <div><strong>CRÍTICO — Frequência alta nas campanhas GDx Leads (2,52 e 2,81)</strong>
+      As duas campanhas "GDx Lead WhatsApp" estão exibindo o mesmo anúncio para as mesmas pessoas repetidamente. CPL via WhatsApp subindo (R$8,79 e R$6,33). Expandir audiências ou pausar.</div>
+    </div>
+
+    <div class="alert alert-green">
+      <div class="alert-icon">🟢</div>
+      <div><strong>DESTAQUE — "Nem tudo que parece..." entregando resultados excepcionais</strong>
+      CTR de 16,46% e CPC de R$0,017 são números raros. Esta campanha está com R$1.498 gastos e 100k+ cliques. Escalar com prioridade máxima.</div>
+    </div>
+
+    <div class="alert alert-orange">
+      <div class="alert-icon">🟡</div>
+      <div><strong>ATENÇÃO — Campanha "GDx Engajamento Venda WhatsApp" com ótimo custo por conexão</strong>
+      R$2,06 por conexão WhatsApp (303 conexões). Está pausada mas é eficiente. Considerar reativar e escalar.</div>
+    </div>
+
+    <div class="alert alert-blue">
+      <div class="alert-icon">🔵</div>
+      <div><strong>INFO — Posts de tráfego (act_996) com CTRs acima da média do mercado</strong>
+      5 posts com CTR entre 5,99% e 8,41% e CPC entre R$0,04–R$0,09. Custo muito competitivo. Manter e testar escalada.</div>
+    </div>
+  </div>
+
+  <!-- TABELA CONTA 1 -->
+  <div class="section">
+    <div class="section-title"><span>📋</span> Desempenho por Campanha</div>
+
+    <div class="account-label">🏷️ Conta: Fabricio Moura — act_996563848688329 (BRL / Sao_Paulo)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Objetivo</th>
+            <th>Gasto</th>
+            <th>Impressões</th>
+            <th>Alcance</th>
+            <th>CTR</th>
+            <th>CPC</th>
+            <th>CPM</th>
+            <th>Freq.</th>
+            <th>Avaliação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="camp-name">Post: Impossível se concentrar...</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td>R$ 132,57</td>
+            <td>35.259</td>
+            <td>28.558</td>
+            <td class="highlight green-text">8,41%</td>
+            <td class="highlight green-text">R$ 0,04</td>
+            <td>R$ 3,76</td>
+            <td>1,23</td>
+            <td><span class="pill pill-green">⭐ Melhor CTR</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">Post: Isso não é emagrecer...</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td>R$ 133,50</td>
+            <td>35.177</td>
+            <td>26.824</td>
+            <td class="highlight green-text">7,72%</td>
+            <td class="highlight green-text">R$ 0,05</td>
+            <td>R$ 3,80</td>
+            <td>1,31</td>
+            <td><span class="pill pill-green">✅ Bom</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">Post: Vai ou não vai?</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td>R$ 132,85</td>
+            <td>32.154</td>
+            <td>25.479</td>
+            <td>7,31%</td>
+            <td>R$ 0,06</td>
+            <td>R$ 4,13</td>
+            <td>1,26</td>
+            <td><span class="pill pill-green">✅ Bom</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">Post: Tá explicado né 😂</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td>R$ 130,09</td>
+            <td>22.177</td>
+            <td>17.552</td>
+            <td>6,86%</td>
+            <td>R$ 0,09</td>
+            <td>R$ 5,87</td>
+            <td>1,26</td>
+            <td><span class="pill pill-orange">⚠️ CPM alto</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">Post: Hipnotizado no ponto fixo 😂</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td>R$ 132,89</td>
+            <td>30.107</td>
+            <td>22.781</td>
+            <td class="orange-text">5,99%</td>
+            <td>R$ 0,07</td>
+            <td>R$ 4,41</td>
+            <td>1,32</td>
+            <td><span class="pill pill-orange">⚠️ CTR menor</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">[VISITAS AO PERFIL]</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td>R$ 518,55</td>
+            <td>109.097</td>
+            <td>98.221</td>
+            <td>7,55%</td>
+            <td class="green-text">R$ 0,06</td>
+            <td>R$ 4,75</td>
+            <td>1,11</td>
+            <td><span class="pill pill-gray">⏸ Pausada</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">[ALCANCE] Reforço de marca</div></td>
+            <td><span class="pill pill-blue">Awareness</span></td>
+            <td>R$ 480,39</td>
+            <td>281.495</td>
+            <td>134.276</td>
+            <td>0,47%</td>
+            <td>R$ 0,36</td>
+            <td class="green-text">R$ 1,71</td>
+            <td class="orange-text">2,10</td>
+            <td><span class="pill pill-orange">⚠️ Freq. subindo</span></td>
+          </tr>
+          <tr style="background:#fff1f0;">
+            <td><div class="camp-name">[LEADS] [ABO] [LP] Captação de leads</div></td>
+            <td><span class="pill pill-orange">Leads</span></td>
+            <td class="red-text"><strong>R$ 812,38</strong></td>
+            <td>59.781</td>
+            <td>21.371</td>
+            <td>0,88%</td>
+            <td>R$ 1,54</td>
+            <td class="red-text"><strong>R$ 13,59</strong></td>
+            <td class="red-text"><strong>2,80</strong></td>
+            <td><span class="pill pill-red">🔴 CPL R$135</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="account-label">🏷️ Conta: GDx — act_1366944221299800 (BRL / Sao_Paulo)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Objetivo</th>
+            <th>Gasto</th>
+            <th>Impressões</th>
+            <th>CTR</th>
+            <th>CPC</th>
+            <th>CPM</th>
+            <th>Freq.</th>
+            <th>Conexões WA</th>
+            <th>Custo/WA</th>
+            <th>Avaliação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#f6ffed;">
+            <td><div class="camp-name">⚠️ Nem tudo que parece...</div></td>
+            <td><span class="pill pill-blue">Tráfego</span></td>
+            <td><strong>R$ 1.498,56</strong></td>
+            <td>543.624</td>
+            <td class="highlight green-text">16,46%</td>
+            <td class="highlight green-text">R$ 0,017</td>
+            <td class="green-text">R$ 2,76</td>
+            <td>1,14</td>
+            <td>157</td>
+            <td>R$ 9,55</td>
+            <td><span class="pill pill-green">⭐ Escalar!</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">GDx | Engajamento Venda | WhatsApp | 18-02</div></td>
+            <td><span class="pill pill-green">Engajamento</span></td>
+            <td>R$ 623,45</td>
+            <td>60.915</td>
+            <td>1,40%</td>
+            <td>R$ 0,73</td>
+            <td>R$ 10,23</td>
+            <td>1,25</td>
+            <td class="green-text"><strong>303</strong></td>
+            <td class="green-text"><strong>R$ 2,06</strong></td>
+            <td><span class="pill pill-green">✅ Melhor WA</span></td>
+          </tr>
+          <tr style="background:#fff1f0;">
+            <td><div class="camp-name">GDx | Lead | WhatsApp | 26-11-25</div></td>
+            <td><span class="pill pill-orange">Leads</span></td>
+            <td>R$ 738,15</td>
+            <td>58.334</td>
+            <td>0,67%</td>
+            <td>R$ 1,89</td>
+            <td>R$ 12,65</td>
+            <td class="red-text"><strong>2,81</strong></td>
+            <td>84</td>
+            <td class="orange-text">R$ 8,79</td>
+            <td><span class="pill pill-red">🔴 Freq. alta</span></td>
+          </tr>
+          <tr style="background:#fff7e6;">
+            <td><div class="camp-name">GDx | Lead | WhatsApp | 02-12-25</div></td>
+            <td><span class="pill pill-orange">Leads</span></td>
+            <td>R$ 487,69</td>
+            <td>49.861</td>
+            <td>0,81%</td>
+            <td>R$ 1,21</td>
+            <td>R$ 9,78</td>
+            <td class="orange-text"><strong>2,52</strong></td>
+            <td>77</td>
+            <td class="orange-text">R$ 6,33</td>
+            <td><span class="pill pill-orange">⚠️ Freq. alta</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">GDx | Engajamento | WhatsApp | 19-02</div></td>
+            <td><span class="pill pill-green">Engajamento</span></td>
+            <td>R$ 82,74</td>
+            <td>8.135</td>
+            <td>0,98%</td>
+            <td>R$ 1,03</td>
+            <td>R$ 10,17</td>
+            <td>1,34</td>
+            <td>24</td>
+            <td>R$ 3,45</td>
+            <td><span class="pill pill-gray">⏸ Pausada</span></td>
+          </tr>
+          <tr>
+            <td><div class="camp-name">GDx | Engajamento | WhatsApp | 18-02 (small)</div></td>
+            <td><span class="pill pill-orange">Leads</span></td>
+            <td>R$ 20,90</td>
+            <td>3.860</td>
+            <td>0,80%</td>
+            <td>R$ 0,67</td>
+            <td>R$ 5,41</td>
+            <td>1,13</td>
+            <td>4</td>
+            <td>R$ 5,23</td>
+            <td><span class="pill pill-gray">⏸ Pausada</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RECOMENDAÇÕES -->
+  <div class="section">
+    <div class="section-title"><span>🎯</span> Plano de Otimização — Ações Recomendadas</div>
+    <div class="rec-grid">
+
+      <div class="rec-card critical">
+        <div class="rec-priority priority-critical">🔴 Prioridade Crítica</div>
+        <div class="rec-title">Reformular campanha de Leads (LP) — CPL de R$135</div>
+        <div class="rec-body">
+          Esta campanha gastou R$812 e gerou apenas 6 leads pelo pixel. Problemas identificados:
+          <ul>
+            <li>Frequência 2,80 → audiência saturada (ideal: abaixo de 2,0)</li>
+            <li>CPM de R$13,59 → o mais caro da conta</li>
+            <li>CTR de 0,88% → criativos não estão engajando</li>
+            <li>Landing page pode ter taxa de conversão baixa</li>
+          </ul>
+          <br><strong>Ações:</strong>
+          <ul>
+            <li>Pausar esta campanha imediatamente</li>
+            <li>Migrar o foco para captação por WhatsApp (custo menor)</li>
+            <li>Revisar/A-B testar a landing page</li>
+            <li>Expandir ou renovar a audiência</li>
+            <li>Renovar os criativos</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rec-card critical">
+        <div class="rec-priority priority-critical">🔴 Prioridade Crítica</div>
+        <div class="rec-title">GDx Leads WhatsApp — Frequência Alta (2,52–2,81)</div>
+        <div class="rec-body">
+          As campanhas "GDx Lead WhatsApp 26-11-25" e "02-12-25" estão com frequência crítica. O mesmo usuário está vendo o anúncio ~3x, elevando custo e gerando fadiga.
+          <ul>
+            <li>Custo/conexão subiu: R$6,33 e R$8,79 respectivamente</li>
+            <li>CPM elevado: R$9,78 e R$12,65</li>
+          </ul>
+          <br><strong>Ações:</strong>
+          <ul>
+            <li>Expandir audiências com Lookalike de quem já conectou</li>
+            <li>Excluir da audiência quem já iniciou conversa</li>
+            <li>Criar novas variações de criativos (pelo menos 3)</li>
+            <li>Considerar pausar a mais antiga (26-11-25)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rec-card positive">
+        <div class="rec-priority priority-positive">🟢 Oportunidade de Escala</div>
+        <div class="rec-title">Escalar "Nem tudo que parece..." — CTR 16,46% / CPC R$0,017</div>
+        <div class="rec-body">
+          Esta publicação está com métricas extraordinárias. CTR de 16,46% é ~5x a média do mercado. Frequência ainda baixa (1,14) com audiência de 475k pessoas alcançadas.
+          <ul>
+            <li>Ainda tem espaço enorme para escalar</li>
+            <li>100k+ cliques com R$1.498 — custo por clique mínimo</li>
+          </ul>
+          <br><strong>Ações:</strong>
+          <ul>
+            <li>Aumentar orçamento diário em 20–30% a cada 3 dias</li>
+            <li>Duplicar campanha para novos públicos (Lookalike 1%, 2%, 3%)</li>
+            <li>Testar em novas regiões geográficas</li>
+            <li>Identificar o que torna este criativo tão eficaz e replicar</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rec-card positive">
+        <div class="rec-priority priority-positive">🟢 Oportunidade de Escala</div>
+        <div class="rec-title">Escalar Posts de Tráfego da conta 996 — CTR 6–8%</div>
+        <div class="rec-body">
+          Os 5 posts de Instagram estão com performance excelente. Custo por clique entre R$0,04 e R$0,09. Frequência baixa (1,23–1,32), sem saturação.
+          <br><br><strong>Ranking dos posts:</strong>
+          <ul>
+            <li>🥇 "Impossível se concentrar" — CTR 8,41% / CPC R$0,04</li>
+            <li>🥈 "Isso não é emagrecer" — CTR 7,72% / CPC R$0,05</li>
+            <li>🥉 "Vai ou não vai?" — CTR 7,31% / CPC R$0,06</li>
+            <li>4. "Tá explicado né" — CTR 6,86% (CPM alto, monitorar)</li>
+            <li>5. "Hipnotizado no ponto fixo" — CTR 5,99% (menor)</li>
+          </ul>
+          <br><strong>Ação:</strong> Aumentar budget do post #1 e #2. Pausar post #5.
+        </div>
+      </div>
+
+      <div class="rec-card warning">
+        <div class="rec-priority priority-warning">🟡 Atenção — Reforço de Marca</div>
+        <div class="rec-title">Frequência 2,10 na campanha Awareness — Expandir público</div>
+        <div class="rec-body">
+          A campanha de alcance está com CPM excelente (R$1,71) mas frequência chegando em 2,10. Para awareness, o ideal é manter entre 1,5 e 2,5.
+          <br><br><strong>Ações:</strong>
+          <ul>
+            <li>Expandir interesse/faixa etária para aumentar pool de audiência</li>
+            <li>Adicionar novos criativos no conjunto de anúncios</li>
+            <li>Testar público Broad (sem interesse) para reduzir CPM ainda mais</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rec-card info">
+        <div class="rec-priority priority-info">🔵 Recomendação Estratégica</div>
+        <div class="rec-title">Reativar campanha "GDx Engajamento Venda WhatsApp" — R$2,06/conexão</div>
+        <div class="rec-body">
+          Esta campanha foi pausada, mas tinha o melhor custo por conexão WhatsApp da conta GDx (R$2,06 vs R$6,33 e R$8,79 das campanhas de Leads).
+          <br><br>Com 303 conexões por R$623, é a mais eficiente para captação via WhatsApp.
+          <br><br><strong>Ações:</strong>
+          <ul>
+            <li>Reativar com orçamento controlado (R$50–100/dia)</li>
+            <li>Escalar gradualmente monitorando o custo/conexão</li>
+            <li>Testar novos criativos nessa mesma estrutura</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCORECARD GERAL -->
+  <div class="section">
+    <div class="section-title"><span>📈</span> Scorecard de Saúde das Campanhas</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Campanha</th>
+            <th>Saúde</th>
+            <th>Ação Recomendada</th>
+            <th>Urgência</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>GDx — "Nem tudo que parece..."</td>
+            <td><span class="pill pill-green">⭐ Excelente</span></td>
+            <td>Escalar orçamento e públicos</td>
+            <td><span class="pill pill-green">Alta</span></td>
+          </tr>
+          <tr>
+            <td>Post: "Impossível se concentrar..."</td>
+            <td><span class="pill pill-green">✅ Muito Bom</span></td>
+            <td>Aumentar budget, manter</td>
+            <td><span class="pill pill-blue">Média</span></td>
+          </tr>
+          <tr>
+            <td>Post: "Isso não é emagrecer..."</td>
+            <td><span class="pill pill-green">✅ Muito Bom</span></td>
+            <td>Aumentar budget</td>
+            <td><span class="pill pill-blue">Média</span></td>
+          </tr>
+          <tr>
+            <td>GDx Engajamento Venda WhatsApp</td>
+            <td><span class="pill pill-green">✅ Bom</span></td>
+            <td>Reativar e escalar</td>
+            <td><span class="pill pill-green">Alta</span></td>
+          </tr>
+          <tr>
+            <td>[ALCANCE] Reforço de marca</td>
+            <td><span class="pill pill-orange">⚠️ Regular</span></td>
+            <td>Expandir audiência, freq. alta</td>
+            <td><span class="pill pill-blue">Média</span></td>
+          </tr>
+          <tr>
+            <td>Post: "Hipnotizado no ponto fixo"</td>
+            <td><span class="pill pill-orange">⚠️ Abaixo</span></td>
+            <td>Pausar e substituir</td>
+            <td><span class="pill pill-blue">Média</span></td>
+          </tr>
+          <tr>
+            <td>GDx Lead WhatsApp 02-12-25</td>
+            <td><span class="pill pill-orange">⚠️ Regular</span></td>
+            <td>Expandir audiências</td>
+            <td><span class="pill pill-orange">Alta</span></td>
+          </tr>
+          <tr>
+            <td>GDx Lead WhatsApp 26-11-25</td>
+            <td><span class="pill pill-red">🔴 Ruim</span></td>
+            <td>Pausar — freq. 2,81</td>
+            <td><span class="pill pill-red">Urgente</span></td>
+          </tr>
+          <tr>
+            <td>[LEADS] [ABO] [LP] Captação de leads</td>
+            <td><span class="pill pill-red">🔴 Crítico</span></td>
+            <td>Pausar — CPL R$135, freq. 2,80</td>
+            <td><span class="pill pill-red">Urgente</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASSOS -->
+  <div class="section">
+    <div class="section-title"><span>✅</span> Checklist de Ações — Próximos 7 Dias</div>
+    <div class="table-wrap" style="padding: 24px;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ação</th>
+            <th>Campanha</th>
+            <th>Prazo</th>
+            <th>Impacto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>⛔ <strong>Pausar</strong> campanha Leads LP (CPL R$135)</td>
+            <td>[LEADS] ABO LP Captação</td>
+            <td>Hoje</td>
+            <td><span class="pill pill-red">Economia R$812+</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>⛔ <strong>Pausar</strong> GDx Lead WhatsApp 26-11-25 (freq. 2,81)</td>
+            <td>GDx | Lead | WA | 26-11</td>
+            <td>Hoje</td>
+            <td><span class="pill pill-red">Reduzir CPL</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>📈 <strong>Aumentar</strong> orçamento "Nem tudo que parece..." em +30%</td>
+            <td>GDx — ⚠️ Publicação</td>
+            <td>Hoje</td>
+            <td><span class="pill pill-green">+Escala baixo custo</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>📈 <strong>Aumentar</strong> budget do post "Impossível se concentrar"</td>
+            <td>act_996 — Posts</td>
+            <td>Hoje</td>
+            <td><span class="pill pill-green">CPC R$0,04</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>▶️ <strong>Reativar</strong> GDx Engajamento Venda WhatsApp</td>
+            <td>GDx | Engaj. Venda | 18-02</td>
+            <td>Amanhã</td>
+            <td><span class="pill pill-green">R$2,06/conexão WA</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>🎨 <strong>Criar</strong> novos criativos para substituir Leads LP</td>
+            <td>Nova campanha Leads</td>
+            <td>3–5 dias</td>
+            <td><span class="pill pill-blue">Reduzir CPL</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>👥 <strong>Criar</strong> Lookalike 1% de quem conectou no WhatsApp</td>
+            <td>GDx Lead WhatsApp 02-12</td>
+            <td>3–5 dias</td>
+            <td><span class="pill pill-blue">Expandir audiência</span></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>⛔ <strong>Pausar</strong> post "Hipnotizado no ponto fixo" (CTR menor)</td>
+            <td>act_996 — Posts</td>
+            <td>Esta semana</td>
+            <td><span class="pill pill-orange">Otimizar verba</span></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>🔍 <strong>Auditar</strong> landing page da campanha de Leads</td>
+            <td>Nova estrutura Leads</td>
+            <td>Esta semana</td>
+            <td><span class="pill pill-orange">Aumentar conv. rate</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Relatório gerado automaticamente via Meta Marketing API v21.0 &nbsp;•&nbsp; Fabricio Moura &nbsp;•&nbsp; 06/03/2026
+</div>
+
+</body>
+</html>

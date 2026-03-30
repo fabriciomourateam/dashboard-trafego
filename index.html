@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Google Ads — Fabricio Moura | Jan–Mar 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{--blue:#4285F4;--green:#34A853;--red:#EA4335;--yellow:#FBBC05;--dark:#202124;--muted:#5f6368;--border:#dadce0;--bg:#f0f2f5;--card:#fff;--orange:#fa8c16}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--dark)}
+  .header{background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;padding:28px 40px}
+  .header h1{font-size:26px;font-weight:700}
+  .header p{font-size:13px;opacity:.8;margin-top:4px}
+  .header-row{display:flex;justify-content:space-between;align-items:flex-start}
+  .badge{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:4px 14px;font-size:12px}
+  .container{max-width:1280px;margin:0 auto;padding:28px 20px}
+  .main-alert{background:#fce8e6;border:2px solid #ea4335;border-radius:14px;padding:20px 24px;margin-bottom:28px}
+  .main-alert h2{color:#c5221f;font-size:17px;margin-bottom:10px}
+  .alert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+  .alert-item{background:#fff;border-radius:10px;padding:14px;border-left:4px solid}
+  .alert-item.red{border-left-color:#ea4335}.alert-item.orange{border-left-color:#fa8c16}.alert-item.blue{border-left-color:#4285F4}.alert-item.green{border-left-color:#34A853}
+  .alert-item h3{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#5f6368;margin-bottom:5px}
+  .alert-item p{font-size:14px;line-height:1.5}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:28px}
+  .kpi{background:#fff;border-radius:12px;padding:18px;border-top:3px solid #4285F4;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+  .kpi.g{border-top-color:#34A853}.kpi.r{border-top-color:#EA4335}.kpi.y{border-top-color:#FBBC05}.kpi.o{border-top-color:#fa8c16}
+  .kpi-label{font-size:11px;color:#5f6368;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .kpi-value{font-size:24px;font-weight:700;margin-top:6px;line-height:1}
+  .kpi-sub{font-size:11.5px;color:#5f6368;margin-top:4px}
+  .section{margin-bottom:36px}
+  .section-title{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .chart-card{background:#fff;border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+  .chart-title{font-size:14px;font-weight:700;margin-bottom:4px}
+  .chart-sub{font-size:12px;color:#5f6368;margin-bottom:16px}
+  .table-wrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:16px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:#f8f9fa;color:#5f6368;font-size:11px;font-weight:700;text-transform:uppercase;padding:11px 14px;text-align:left;border-bottom:1px solid #dadce0}
+  td{padding:11px 14px;border-bottom:1px solid #f0f2f5;vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#fafbfc}
+  .tn{font-weight:600}
+  .pill{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+  .pg{background:#e6f4ea;color:#137333}.pr{background:#fce8e6;color:#c5221f}.po{background:#fef3e2;color:#e37400}.pb{background:#e8f0fe;color:#1a73e8}.py{background:#fef9e3;color:#9c6e00}
+  .green{color:#137333;font-weight:700}.red{color:#c5221f;font-weight:700}.orange{color:#e37400;font-weight:700}.blue{color:#1a73e8;font-weight:700}
+  .sw{display:flex;align-items:center;gap:8px}
+  .sb{flex:1;background:#e8eaed;border-radius:4px;height:8px}
+  .sf{height:8px;border-radius:4px}
+  .sv{font-size:12px;font-weight:700;min-width:40px;text-align:right}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .br{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .bl{min-width:110px;font-size:12px;color:#5f6368}
+  .bt{flex:1;background:#e8eaed;border-radius:4px;height:13px}
+  .bf{height:13px;border-radius:4px}
+  .bv{min-width:70px;font-size:12px;font-weight:700;text-align:right}
+  .rec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+  .rec{background:#fff;border-radius:12px;padding:18px;border-top:3px solid;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+  .rec.critical{border-top-color:#EA4335}.rec.warn{border-top-color:#FBBC05}.rec.pos{border-top-color:#34A853}.rec.info{border-top-color:#4285F4}
+  .rp{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+  .rt{font-size:14px;font-weight:700;margin-bottom:8px}
+  .rb{font-size:13px;color:#5f6368;line-height:1.55}
+  .rb ul{margin-left:16px;margin-top:6px}.rb li{margin-bottom:4px}
+  .ib{border-radius:10px;padding:14px 18px;margin-bottom:12px;font-size:13.5px;line-height:1.55;display:flex;gap:12px}
+  .ib.blue{background:#e8f0fe;border:1px solid #aecbfa}.ib.green{background:#e6f4ea;border:1px solid #a8d5b5}.ib.orange{background:#fef3e2;border:1px solid #fdd663}.ib.red{background:#fce8e6;border:1px solid #f28b82}
+  .ii{font-size:18px;flex-shrink:0}
+  .cg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .cc{background:#fff;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+  .cc h3{font-size:13px;font-weight:700;margin-bottom:12px}
+  .ci{padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:12.5px;line-height:1.4}
+  .ca{background:#e6f4ea;color:#137333}.cp{background:#fce8e6;color:#c5221f}.cm{background:#fef3e2;color:#e37400}
+  .footer{text-align:center;padding:24px;color:#5f6368;font-size:12px;border-top:1px solid #dadce0}
+  @media(max-width:768px){.two-col,.cg{grid-template-columns:1fr}.header{padding:20px}.container{padding:16px}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-row">
+    <div><h1>📊 Dashboard Google Ads — Análise Completa</h1><p>Fabricio Moura • Nutricionista &amp; Fisiculturista | 01/01/2026 – 18/03/2026 | Customer ID: 994-812-7280</p></div>
+    <div><div class="badge">Atualizado 19/03/2026</div></div>
+  </div>
+</div>
+<div class="container">
+
+  <div class="main-alert">
+    <h2>🔴 Por que os leads caíram nas últimas 2 semanas?</h2>
+    <p style="font-size:14px;color:#5f6368">Queda de <strong>~57 conv/dia (fevereiro)</strong> para <strong>~45 conv/dia (5–18/mar)</strong></p>
+    <div class="alert-grid">
+      <div class="alert-item red"><h3>Causa Principal</h3><p><strong>Budget cortado -38%</strong><br>Fev: R$992/dia → Mar: R$672/dia<br>Menos gasto = menos leads. Eficiência até melhorou.</p></div>
+      <div class="alert-item orange"><h3>Causa 2</h3><p><strong>Scores caíram -9 pts em TODAS as campanhas</strong> — mudança sistêmica causou fase de aprendizado no Google.</p></div>
+      <div class="alert-item red"><h3>Sangria Ativa</h3><p><strong>R$2.495 em "personal inteligente"</strong><br>Marca concorrente. 1.380 cliques, <strong>ZERO conversões</strong>.</p></div>
+      <div class="alert-item green"><h3>Boa Notícia</h3><p><strong>CPL melhorou: R$19 → R$15</strong><br>Não é ineficiência — é volume. Restaurar budget recupera leads.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>💰</span> Visão Geral — 01/Jan a 18/Mar (77 dias)</div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kpi-label">Gasto Total</div><div class="kpi-value">R$59.067</div><div class="kpi-sub">5 campanhas • 77 dias</div></div>
+      <div class="kpi g"><div class="kpi-label">Total Conversões</div><div class="kpi-value">3.621</div><div class="kpi-sub">Leads rastreados</div></div>
+      <div class="kpi g"><div class="kpi-label">CPL Médio Geral</div><div class="kpi-value">R$16,31</div><div class="kpi-sub">Melhorou vs fev</div></div>
+      <div class="kpi y"><div class="kpi-label">Melhor CPL</div><div class="kpi-value">R$11,41</div><div class="kpi-sub">Fim de Semana ⭐</div></div>
+      <div class="kpi r"><div class="kpi-label">Pior CPL</div><div class="kpi-value">R$22,64</div><div class="kpi-sub">[SEARCH] M.FUNIL</div></div>
+      <div class="kpi r"><div class="kpi-label">Desperdício Real</div><div class="kpi-value">R$2.495</div><div class="kpi-sub">Personal Intelig. (0 conv)</div></div>
+      <div class="kpi"><div class="kpi-label">CPC Médio Search</div><div class="kpi-value">R$2,22</div><div class="kpi-sub">25.055 cliques</div></div>
+      <div class="kpi r"><div class="kpi-label">Score Principal</div><div class="kpi-value">49,3%</div><div class="kpi-sub">↓ de 57,5% — crítico</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>📅</span> Comparativo Mensal</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Mês</th><th>Gasto</th><th>Gasto/Dia</th><th>Conv/Dia</th><th>CPL</th><th>Avaliação</th></tr></thead>
+      <tbody>
+        <tr><td class="tn">Janeiro (31 dias)</td><td>R$18.010</td><td>R$581/dia</td><td>40,6</td><td class="green">R$14,29</td><td><span class="pill pb">📈 Crescimento</span></td></tr>
+        <tr style="background:#e6f4ea"><td class="tn">Fevereiro (28 dias) ⭐</td><td><strong>R$27.775</strong></td><td class="orange">R$992/dia</td><td class="green"><strong>54,8</strong></td><td class="orange">R$18,10</td><td><span class="pill pg">⭐ Melhor mês</span></td></tr>
+        <tr style="background:#fef3e2"><td class="tn">Março 1–18 (18 dias)</td><td>R$13.282</td><td class="red">R$738/dia</td><td class="red">45,9</td><td class="green">R$16,08</td><td><span class="pill po">⚠️ Budget cortado</span></td></tr>
+        <tr style="background:#fce8e6"><td class="tn">↳ Últimas 2 semanas (5–18/mar)</td><td>R$9.413</td><td class="red">R$672/dia</td><td class="red">45,0</td><td class="green">R$14,94 ✅</td><td><span class="pill pr">🔴 Queda de volume</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="ib blue"><div class="ii">💡</div><div><strong>Interpretação:</strong> O CPL de março (R$14,94) é o MELHOR do período — a conta está mais eficiente. A queda de leads não é performance, é <strong>volume de investimento</strong>. Fevereiro gastou 48% mais por dia e gerou 22% mais conversões. Restaurar o budget é a ação mais impactante agora.</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>📈</span> Série Temporal — Conversões e Gasto Diário (77 dias)</div>
+    <div class="chart-card">
+      <div class="chart-title">Conversões/dia vs Gasto/dia — 01/Jan a 18/Mar/2026</div>
+      <div class="chart-sub">Pontos vermelhos = últimas 2 semanas (queda de volume) | Pico máximo: 24/fev com 78,9 conversões</div>
+      <canvas id="timelineChart" height="110"></canvas>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>🔄</span> O Que Mudou — Jan/2026 vs Out–Dez/2025</div>
+    <div class="cg">
+      <div class="cc"><h3>✅ Adicionado / Aumentado</h3>
+        <div class="ci ca"><strong>Grupo 2 — Alimentação e dieta</strong><br>Novo grupo no M.FUNIL. De R$0 → R$1.264.<br>⚠️ Provável gatilho da fase de aprendizado.</div>
+        <div class="ci ca"><strong>[F.FUNIL] Budget +120%</strong><br>R$12.318 → R$27.100. Responsável pelo crescimento de jan/fev.</div>
+        <div class="ci ca"><strong>Fim de Semana +96%</strong><br>R$4.080 → R$8.007. ✅ Correto — melhor CPL (R$11,41).</div>
+        <div class="ci ca"><strong>Display RMKT +118%</strong><br>R$1.482 → R$3.243. ✅ Retargeting funcionando (R$13,43/conv).</div>
+      </div>
+      <div class="cc"><h3>⏸️ Pausado / Removido</h3>
+        <div class="ci cp"><strong>[Campanha Aberta] Formulário</strong><br>Pausada corretamente — CPL R$30,29, o mais caro.</div>
+        <div class="ci cp"><strong>Keywords pausadas:</strong><br>"emagrecer" (CTR 1,36%), "perde peso", "perder barriga", "perder gordura", "gordura localizada", "ganhar massa magra"<br>⚠️ Pode ter contribuído para queda de volume.</div>
+      </div>
+      <div class="cc"><h3>⚠️ Modificado / A Revisar</h3>
+        <div class="ci cm"><strong>Budget cortado -38% em março</strong><br>R$992/dia → R$672/dia — principal causa da queda de leads.</div>
+        <div class="ci cm"><strong>Scores caíram -9 pts em TODAS campanhas</strong><br>Fase de aprendizado ativa no Google.</div>
+        <div class="ci cm"><strong>[M.FUNIL] Grupo 3 cresceu +64%</strong><br>R$6.048 → R$9.903, mas continua pior CPL (R$22,64).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>📋</span> Desempenho por Campanha</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Campanha</th><th>Status</th><th>Gasto</th><th>Conversões</th><th>CPL</th><th>Score Atual</th><th>Variação</th></tr></thead>
+      <tbody>
+        <tr><td class="tn">[SEARCH] [F.FUNIL] [PRINCIPAL]</td><td><span class="pill pg">Ativo</span></td><td><strong>R$27.100</strong></td><td>1.759</td><td>R$15,40</td><td><div class="sw"><div class="sb"><div class="sf" style="width:49.3%;background:#EA4335"></div></div><div class="sv red">49,3%</div></div></td><td class="red">↓ de 57,5%</td></tr>
+        <tr><td class="tn">[SEARCH] [M.FUNIL]</td><td><span class="pill pg">Ativo</span></td><td>R$19.945</td><td>881</td><td class="red">R$22,64</td><td><div class="sw"><div class="sb"><div class="sf" style="width:68.7%;background:#FBBC05"></div></div><div class="sv orange">68,7%</div></div></td><td class="red">↓ de 78,0%</td></tr>
+        <tr style="background:#e6f4ea"><td class="tn">Fim de semana ⭐</td><td><span class="pill pg">Ativo</span></td><td>R$8.007</td><td>702</td><td class="green">R$11,41</td><td><div class="sw"><div class="sb"><div class="sf" style="width:54.3%;background:#FBBC05"></div></div><div class="sv orange">54,3%</div></div></td><td class="red">↓ de 63,3%</td></tr>
+        <tr><td class="tn">Display RMKT</td><td><span class="pill pg">Ativo</span></td><td>R$3.243</td><td>242</td><td>R$13,43</td><td><div class="sw"><div class="sb"><div class="sf" style="width:69%;background:#FBBC05"></div></div><div class="sv orange">69,0%</div></div></td><td class="red">↓ de 78,9%</td></tr>
+        <tr><td class="tn">[Institucional] Fabricio Moura</td><td><span class="pill pg">Ativo</span></td><td>R$228</td><td>19</td><td class="green">R$12,31</td><td><div class="sw"><div class="sb"><div class="sf" style="width:48.1%;background:#EA4335"></div></div><div class="sv red">48,1%</div></div></td><td class="red">↓ de 58,0%</td></tr>
+        <tr style="background:#f8f9fa"><td class="tn">[New] Campanha Aberta</td><td><span class="pill pr">Pausada ✅</span></td><td>R$545</td><td>18</td><td class="red">R$30,29</td><td>—</td><td><span class="pill pg">Pausada corretamente</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="ib red"><div class="ii">🚨</div><div><strong>Queda de -9 pts em TODAS as campanhas simultaneamente</strong> — isso não é coincidência. Indica que uma mudança sistêmica na conta (adição do Grupo 2 ou corte de budget) ativou a fase de aprendizado do Google. Evite novas mudanças até estabilizar — a fase dura 7–14 dias.</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>💸</span> Análise de Desperdício — Atualizada</div>
+    <div class="ib green"><div class="ii">✅</div><div><strong>Cidades (BH, Curitiba, SP, etc.): NÃO são desperdício</strong> — Pessoas buscando nutricionista presencial descobrem seu modelo online e convertem. Estratégia válida confirmada pelo próprio Fabricio.</div></div>
+    <div class="ib blue"><div class="ii">🔵</div><div><strong>"Endócrino esportivo", "Médico esportivo", "Nutrólogo":</strong> Potencial de conversão para homens em protocolo hormonal (TRT/AAS). Manter e monitorar — segmento qualificado para o serviço.</div></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Termo</th><th>Gasto (Jan–Mar)</th><th>Cliques</th><th>Conv.</th><th>Problema</th><th>Ação</th></tr></thead>
+      <tbody>
+        <tr style="background:#fce8e6"><td class="tn">personal inteligente</td><td class="red">R$2.325,49</td><td>1.380</td><td class="red"><strong>0</strong></td><td>Marca concorrente (app fitness). Buscam o app, não o serviço.</td><td><span class="pill pr">🚫 Negativa URGENTE</span></td></tr>
+        <tr style="background:#fce8e6"><td class="tn">nutri inteligente</td><td class="red">R$96,54</td><td>63</td><td class="red"><strong>0</strong></td><td>Variação do concorrente "Personal Inteligente".</td><td><span class="pill pr">🚫 Negativa</span></td></tr>
+        <tr style="background:#fce8e6"><td class="tn">personal inteligente online</td><td class="red">R$73,35</td><td>41</td><td class="red"><strong>0</strong></td><td>Variação do concorrente.</td><td><span class="pill pr">🚫 Negativa</span></td></tr>
+        <tr style="background:#fef3e2"><td class="tn">tdee calculator</td><td class="orange">R$121,54</td><td>75</td><td class="red"><strong>0</strong></td><td>Ferramenta gratuita de metabolismo. Não compra serviço.</td><td><span class="pill pr">🚫 Negativa</span></td></tr>
+        <tr style="background:#fef3e2"><td class="tn">mfit personal</td><td class="orange">R$13,66</td><td>10</td><td class="red"><strong>0</strong></td><td>App concorrente (MFit).</td><td><span class="pill pr">🚫 Negativa</span></td></tr>
+      </tbody>
+    </table></div>
+    <div style="background:#fce8e6;border-radius:10px;padding:16px;font-size:14px"><strong>💸 Desperdício confirmado: R$2.630 neste período.</strong> Negativar esses termos = ~176 conversões extras ao CPL atual.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>🔑</span> Palavras-Chave — Top</div>
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-title">Por Gasto</div>
+        <div class="br"><div class="bl">nutricionista online ×3</div><div class="bt"><div class="bf" style="width:100%;background:#EA4335"></div></div><div class="bv red">R$35.293 ⚠️</div></div>
+        <div style="font-size:10px;color:#c5221f;margin:-7px 0 10px 120px">3 campanhas disputando mesma keyword — canibalização!</div>
+        <div class="br"><div class="bl">nutricionista esportivo</div><div class="bt"><div class="bf" style="width:14%;background:#34A853"></div></div><div class="bv">R$4.934</div></div>
+        <div class="br"><div class="bl">personal</div><div class="bt"><div class="bf" style="width:13.5%;background:#34A853"></div></div><div class="bv">R$4.776</div></div>
+        <div class="br"><div class="bl">acompanhamento nutr.</div><div class="bt"><div class="bf" style="width:10%;background:#FBBC05"></div></div><div class="bv">R$3.550</div></div>
+        <div class="br"><div class="bl">perder culote</div><div class="bt"><div class="bf" style="width:2.7%;background:#FBBC05"></div></div><div class="bv">R$971</div></div>
+        <div class="br"><div class="bl">consultoria fitness</div><div class="bt"><div class="bf" style="width:2.6%;background:#4285F4"></div></div><div class="bv">R$921</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Por CTR — Maior Intenção</div>
+        <div class="br"><div class="bl">nutricionista fab. moura</div><div class="bt"><div class="bf" style="width:100%;background:#34A853"></div></div><div class="bv green">30,0%</div></div>
+        <div class="br"><div class="bl">fabricio moura nutri.</div><div class="bt"><div class="bf" style="width:44%;background:#34A853"></div></div><div class="bv green">13,3%</div></div>
+        <div class="br"><div class="bl">nutricionista fabricio</div><div class="bt"><div class="bf" style="width:39%;background:#34A853"></div></div><div class="bv green">11,65%</div></div>
+        <div class="br"><div class="bl">personal</div><div class="bt"><div class="bf" style="width:37%;background:#4285F4"></div></div><div class="bv">11,04%</div></div>
+        <div class="br"><div class="bl">Emagrecimento</div><div class="bt"><div class="bf" style="width:31%;background:#4285F4"></div></div><div class="bv">9,22%</div></div>
+        <div class="br"><div class="bl">nutri. esportivo online</div><div class="bt"><div class="bf" style="width:27%;background:#FBBC05"></div></div><div class="bv orange">8,14%</div></div>
+        <div style="margin-top:12px;background:#e6f4ea;border-radius:8px;padding:12px;font-size:12px">💡 Keywords de marca têm CTR 30% — expandir campanha Institucional com mais budget.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col section">
+    <div class="chart-card">
+      <div class="chart-title">⏰ Impressões por Horário (Jan–Mar)</div>
+      <canvas id="horaChart" height="200"></canvas>
+      <div style="margin-top:12px;background:#e8f0fe;border-radius:8px;padding:12px;font-size:12px">💡 Como você atende 24/7, não corte madrugada — menos concorrência = CPC mais barato. Pico: 09h–16h.</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">📅 Impressões por Dia da Semana</div>
+      <div class="br"><div class="bl">Segunda-feira</div><div class="bt"><div class="bf" style="width:100%;background:#4285F4"></div></div><div class="bv">94.816</div></div>
+      <div class="br"><div class="bl">Domingo</div><div class="bt"><div class="bf" style="width:94%;background:#4285F4"></div></div><div class="bv">89.233</div></div>
+      <div class="br"><div class="bl">Sexta-feira</div><div class="bt"><div class="bf" style="width:86%;background:#34A853"></div></div><div class="bv">81.331</div></div>
+      <div class="br"><div class="bl">Sábado</div><div class="bt"><div class="bf" style="width:83%;background:#34A853"></div></div><div class="bv">78.474</div></div>
+      <div class="br"><div class="bl">Terça-feira</div><div class="bt"><div class="bf" style="width:82%;background:#FBBC05"></div></div><div class="bv">78.162</div></div>
+      <div class="br"><div class="bl">Quarta-feira</div><div class="bt"><div class="bf" style="width:74%;background:#FBBC05"></div></div><div class="bv">69.934</div></div>
+      <div class="br"><div class="bl">Quinta-feira</div><div class="bt"><div class="bf" style="width:72%;background:#FBBC05"></div></div><div class="bv">68.260</div></div>
+      <div style="margin-top:12px;background:#e6f4ea;border-radius:8px;padding:12px;font-size:12px">💡 Segunda e Domingo têm mais volume — campanha "Fim de Semana" bem posicionada para capturar esse tráfego.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>📊</span> Queda de Scores — Comparativo</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Campanha</th><th>Score Mar/26</th><th>Score Fev/26</th><th>Variação</th></tr></thead>
+      <tbody>
+        <tr><td class="tn">[F.FUNIL] [PRINCIPAL]</td><td><div class="sw"><div class="sb"><div class="sf" style="width:49.3%;background:#EA4335"></div></div><div class="sv red">49,3%</div></div></td><td><div class="sw"><div class="sb"><div class="sf" style="width:57.5%;background:#FBBC05"></div></div><div class="sv orange">57,5%</div></div></td><td class="red">↓ -8,2 pts 🔴</td></tr>
+        <tr><td class="tn">[SEARCH] [M.FUNIL]</td><td><div class="sw"><div class="sb"><div class="sf" style="width:68.7%;background:#FBBC05"></div></div><div class="sv orange">68,7%</div></div></td><td><div class="sw"><div class="sb"><div class="sf" style="width:78%;background:#FBBC05"></div></div><div class="sv orange">78,0%</div></div></td><td class="red">↓ -9,3 pts</td></tr>
+        <tr><td class="tn">Fim de semana</td><td><div class="sw"><div class="sb"><div class="sf" style="width:54.3%;background:#FBBC05"></div></div><div class="sv orange">54,3%</div></div></td><td><div class="sw"><div class="sb"><div class="sf" style="width:63.3%;background:#FBBC05"></div></div><div class="sv orange">63,3%</div></div></td><td class="red">↓ -9,0 pts</td></tr>
+        <tr><td class="tn">Display RMKT</td><td><div class="sw"><div class="sb"><div class="sf" style="width:69%;background:#FBBC05"></div></div><div class="sv orange">69,0%</div></div></td><td><div class="sw"><div class="sb"><div class="sf" style="width:78.9%;background:#34A853"></div></div><div class="sv green">78,9%</div></div></td><td class="red">↓ -9,9 pts</td></tr>
+        <tr><td class="tn">[Institucional]</td><td><div class="sw"><div class="sb"><div class="sf" style="width:48.1%;background:#EA4335"></div></div><div class="sv red">48,1%</div></div></td><td><div class="sw"><div class="sb"><div class="sf" style="width:58%;background:#FBBC05"></div></div><div class="sv orange">58,0%</div></div></td><td class="red">↓ -9,9 pts</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>🎯</span> Plano de Ação</div>
+    <div class="rec-grid">
+      <div class="rec critical"><div class="rp" style="color:#c5221f">🔴 URGENTE — Hoje</div><div class="rt">Negativar "personal inteligente" e variações</div><div class="rb">R$2.495 desperdiçados. Zero conversões. Marca concorrente.<ul><li>Lista negativa de conta: "personal inteligente", "nutri inteligente", "personal inteligente online"</li><li>Também: "tdee calculator", "mfit personal"</li><li>Libera ~R$2.630/período para campanhas que convertem</li></ul></div></div>
+      <div class="rec critical"><div class="rp" style="color:#c5221f">🔴 URGENTE — Hoje</div><div class="rt">Restaurar budget de fevereiro</div><div class="rb">A queda de leads é proporcional à queda de budget.<ul><li>Fevereiro: R$992/dia → 54,8 conv/dia</li><li>Março: R$672/dia → 45 conv/dia</li><li>Aumentar para R$900–1.000/dia na conta</li><li>Prioridade: F.FUNIL e Fim de Semana</li></ul></div></div>
+      <div class="rec warn"><div class="rp" style="color:#9c6e00">🟡 Esta Semana</div><div class="rt">Elevar scores — aba Recomendações</div><div class="rb">Todos os scores na zona crítica. Google tem sugestões não implementadas.<ul><li>Adicionar extensões (sitelinks, chamadas, snippets)</li><li>Mais variações de títulos nos anúncios responsivos</li><li>Meta: F.FUNIL de 49,3% → 70%+</li></ul></div></div>
+      <div class="rec warn"><div class="rp" style="color:#9c6e00">🟡 Esta Semana</div><div class="rt">Resolver canibalização "nutricionista online"</div><div class="rb">R$35.293 em 3 campanhas disputando mesma keyword.<ul><li>Definir qual campanha é a "dona"</li><li>Excluir das outras com palavra-chave negativa</li><li>Resultado esperado: CPC -15–25%</li></ul></div></div>
+      <div class="rec pos"><div class="rp" style="color:#137333">🟢 Escalar</div><div class="rt">Aumentar budget "Fim de Semana" +50%</div><div class="rb">Melhor CPL (R$11,41). Você atende 24/7 — vantagem real.<ul><li>Menos concorrência nos fins de semana = CPC mais barato</li><li>+50% budget → estimativa +40% conversões</li><li>ROI: R$11,41 investido → R$1.800 de retorno (ticket × fechamento)</li></ul></div></div>
+      <div class="rec info"><div class="rp" style="color:#1a73e8">🔵 Monitorar</div><div class="rt">Aguardar fim da fase de aprendizado</div><div class="rb">Scores caíram simultaneamente — aprendizado ativo.<ul><li>Fase dura 7–14 dias após última mudança</li><li>Não fazer novas mudanças durante esse período</li><li>Google precisa de ~50 conv/campanha para sair do aprendizado</li><li>Após estabilizar, scores voltam naturalmente</li></ul></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>✅</span> Checklist — Próximos 7 Dias</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>#</th><th>Ação</th><th>Impacto</th><th>Prazo</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>🚫 <strong>Negativar "personal inteligente" e variações</strong></td><td><span class="pill pr">Recuperar R$2.630/período</span></td><td>Hoje</td></tr>
+        <tr><td>2</td><td>📈 <strong>Restaurar budget para R$900–1.000/dia</strong></td><td><span class="pill pg">+20% em leads</span></td><td>Hoje</td></tr>
+        <tr><td>3</td><td>📅 <strong>Aumentar budget Fim de Semana +50%</strong></td><td><span class="pill pg">Melhor CPL: R$11,41</span></td><td>Hoje</td></tr>
+        <tr><td>4</td><td>📊 <strong>Implementar recomendações do Google em todas as campanhas</strong></td><td><span class="pill po">Score 49% → 70%+</span></td><td>Amanhã</td></tr>
+        <tr><td>5</td><td>🔍 <strong>Resolver canibalização "nutricionista online" (3 camp.)</strong></td><td><span class="pill po">CPC -15–25%</span></td><td>3 dias</td></tr>
+        <tr><td>6</td><td>🔑 <strong>Analisar conversões por grupo no M.FUNIL</strong></td><td><span class="pill po">Identificar grupo ineficiente</span></td><td>3 dias</td></tr>
+        <tr><td>7</td><td>🏷️ <strong>Aumentar [Institucional] para R$800/mês</strong></td><td><span class="pill pg">CPL R$12,31 — eficiente</span></td><td>Esta semana</td></tr>
+        <tr><td>8</td><td>⏳ <strong>Não fazer novas mudanças por 7–14 dias após as acima</strong></td><td><span class="pill pb">Sair do aprendizado</span></td><td>Contínuo</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+</div>
+<div class="footer">Dashboard Google Ads — Fabricio Moura • Nutricionista &amp; Fisiculturista • 01/Jan–18/Mar/2026 • Customer ID: 994-812-7280<br>Análise baseada em 15 arquivos CSV exportados do Google Ads</div>
+
+<script>
+const labels=['01/jan','02/jan','03/jan','04/jan','05/jan','06/jan','07/jan','08/jan','09/jan','10/jan','11/jan','12/jan','13/jan','14/jan','15/jan','16/jan','17/jan','18/jan','19/jan','20/jan','21/jan','22/jan','23/jan','24/jan','25/jan','26/jan','27/jan','28/jan','29/jan','30/jan','31/jan','01/fev','02/fev','03/fev','04/fev','05/fev','06/fev','07/fev','08/fev','09/fev','10/fev','11/fev','12/fev','13/fev','14/fev','15/fev','16/fev','17/fev','18/fev','19/fev','20/fev','21/fev','22/fev','23/fev','24/fev','25/fev','26/fev','27/fev','28/fev','01/mar','02/mar','03/mar','04/mar','05/mar','06/mar','07/mar','08/mar','09/mar','10/mar','11/mar','12/mar','13/mar','14/mar','15/mar','16/mar','17/mar','18/mar'];
+const conv=[17.58,20.99,28.04,31,41.33,38.5,39.02,42.01,26.5,48.07,43,53.14,46.1,43.02,38.04,30.03,41.62,45,41.81,32.04,46.45,35.02,23.76,37.5,38.08,43,62,53,70.69,48.41,55.1,57.16,65.01,63.85,73.24,67.71,48.02,56.89,50.57,52.96,68.51,60.68,50.81,40,45.98,52.48,47.46,43,44.02,49.49,47.5,58.01,52.49,64,78.9,58.14,56.3,42.7,38.99,43.01,64.97,51.67,47.28,45,44.83,47.14,39.01,39,37.49,53.5,51,38.99,43.99,42,49.97,41,45.99];
+const gasto=[236,233,197,275,448,446,536,508,399,637,599,600,618,596,536,425,425,472,622,525,556,422,341,715,542,836,1102,1173,1235,910,846,1086,1384,1378,1361,1163,1115,870,937,1165,1335,1097,844,777,687,633,1022,840,901,854,901,626,704,1125,1209,1078,1078,1004,602,632,1034,1000,1002,754,722,616,596,731,727,730,688,672,542,606,724,751,756];
+const pc=labels.map((_,i)=>i>=63?'#EA4335':'rgba(66,133,244,0.8)');
+const pr2=labels.map((_,i)=>i>=63?5:2);
+const ctx=document.getElementById('timelineChart').getContext('2d');
+new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Conversões/dia',data:conv,borderColor:'#4285F4',backgroundColor:'rgba(66,133,244,0.07)',borderWidth:2,fill:true,tension:0.3,pointRadius:pr2,pointBackgroundColor:pc,yAxisID:'y1'},{label:'Gasto R$/dia',data:gasto,borderColor:'#34A853',borderDash:[5,3],borderWidth:2,fill:false,tension:0.3,pointRadius:0,yAxisID:'y2'}]},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{font:{size:12}}},tooltip:{callbacks:{label:function(c){return c.datasetIndex===0?` Conv: ${c.raw.toFixed(1)}`:(` Gasto: R$${c.raw.toLocaleString('pt-BR')}`)}}}},scales:{y1:{type:'linear',position:'left',title:{display:true,text:'Conv/dia',font:{size:11}},grid:{color:'#f0f2f5'}},y2:{type:'linear',position:'right',title:{display:true,text:'Gasto R$',font:{size:11}},grid:{drawOnChartArea:false}},x:{ticks:{font:{size:9},maxTicksLimit:20,maxRotation:45},grid:{color:'#f8f9fa'}}}}});
+const horas=['00h','01h','02h','03h','04h','05h','06h','07h','08h','09h','10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h','23h'];
+const impr=[13842,9609,6172,4490,3831,5748,10835,22662,29862,37520,41835,41567,40185,39794,40032,38847,37913,29371,23488,22499,21803,18821,11459,8025];
+const mx=Math.max(...impr);
+const hc=impr.map(v=>{const r=v/mx;return r>.8?'#4285F4':r>.5?'#34A853':r>.3?'#FBBC05':'#EA4335';});
+const ctx2=document.getElementById('horaChart').getContext('2d');
+new Chart(ctx2,{type:'bar',data:{labels:horas,datasets:[{label:'Impressões',data:impr,backgroundColor:hc,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw.toLocaleString('pt-BR')} impressões`}}},scales:{y:{grid:{color:'#f0f2f5'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+</script>
+</body>
+</html>
