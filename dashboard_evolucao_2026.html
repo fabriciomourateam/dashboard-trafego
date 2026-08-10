@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evolução de Tráfego 2026 — Google Ads × Funil Real (CRM)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b0f17; --card:#131926; --card2:#0f1420; --line:#1f2937;
+    --txt:#e5e7eb; --muted:#94a3b8; --dim:#64748b;
+    --accent:#8b5cf6; --green:#10b981; --red:#ef4444; --amber:#f59e0b; --blue:#3b82f6; --cyan:#22d3ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.5;padding:0 0 80px}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+  header{background:linear-gradient(135deg,#1e1b4b 0%,#0b0f17 70%);padding:36px 0 28px;border-bottom:1px solid var(--line);margin-bottom:28px}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.5px}
+  h2{font-size:19px;font-weight:700;margin:38px 0 14px;padding-left:11px;border-left:4px solid var(--accent)}
+  h3{font-size:15px;font-weight:700;margin:18px 0 8px;color:#cbd5e1}
+  .sub{color:var(--muted);font-size:13px;margin-top:6px}
+  .pill{display:inline-block;background:#1e293b;color:var(--cyan);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-right:6px}
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g4,.g3,.g2{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.g4,.g3,.g2{grid-template-columns:1fr}}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .kpi .lbl{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+  .kpi .val{font-size:26px;font-weight:800;margin-top:6px}
+  .kpi .delta{font-size:12px;font-weight:700;margin-top:4px}
+  .up{color:var(--green)} .down{color:var(--red)} .neu{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+  .chartbox{position:relative;height:320px}
+  .chartbox.tall{height:380px}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+  td:first-child,th:first-child{text-align:left}
+  tbody tr:hover{background:#0f1726}
+  .tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px}
+  .t-on{background:rgba(16,185,129,.15);color:#34d399} .t-off{background:rgba(148,163,184,.15);color:#94a3b8}
+  .t-bad{background:rgba(239,68,68,.15);color:#f87171} .t-warn{background:rgba(245,158,11,.15);color:#fbbf24}
+  .alert{border-radius:12px;padding:16px 18px;margin-top:14px;font-size:14px}
+  .alert b{font-weight:800}
+  .a-red{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.35)}
+  .a-amber{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.35)}
+  .a-green{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.35)}
+  .a-blue{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.35)}
+  ul{margin:8px 0 4px 20px} li{margin:5px 0;font-size:13.5px}
+  .muted{color:var(--muted)} .small{font-size:12px}
+  .note{font-size:12px;color:var(--dim);margin-top:8px;font-style:italic}
+  .flex{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .bignum{font-size:15px;font-weight:800}
+  code{background:#1e293b;padding:1px 6px;border-radius:4px;font-size:12px;color:#fbbf24}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>📊 Evolução de Tráfego — 2026</h1>
+    <div class="sub">Google Ads (01/jan → 04/ago/2026) cruzado com o funil real de vendas do CRM (leads → call → venda).</div>
+    <div style="margin-top:12px">
+      <span class="pill">Google Ads CSV</span>
+      <span class="pill">CRM · Supabase</span>
+      <span class="pill">Gerado em 05/ago/2026</span>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+
+  <!-- ═══ DIAGNÓSTICO EXECUTIVO ═══ -->
+  <h2>Diagnóstico executivo</h2>
+  <div class="alert a-green">
+    ✅ <b>O negócio está saudável.</b> Ticket médio estável em <b>~R$2.300</b>, ROAS entre 4x e 9x o ano todo. O que parecia "queda de faturamento" em jun–ago é <b>atraso de lançamento no sistema</b> (48 de 78 vendas de julho e 25 de 25 de agosto estão sem valor preenchido), não queda real.
+  </div>
+  <div class="alert a-amber">
+    ⚠️ <b>O problema é eficiência de aquisição.</b> De maio pra cá o volume de leads do Google <b>triplicou</b> (162→689/mês), o custo por lead <b>despencou</b> (R$112→R$29)… mas o número de pessoas que realmente <b>agenda uma call caiu</b> (184→112) e o custo por venda (CAC) <b>subiu</b> de ~R$258 (jan) para R$500–970 (mar–jun). Tráfego trazendo volume barato de baixa intenção.
+  </div>
+  <div class="alert a-red">
+    🎯 <b>Raiz do problema (a maior alavanca):</b> o Google Ads reporta <b>~11.300 "conversões"</b> no período, mas o CRM registrou <b>~2.574 leads</b> e <b>~200 vendas</b>. Ou seja, o algoritmo está otimizando por um evento (preenchimento de formulário) que é <b>4–5x maior que o lead real</b> e <b>~50x maior que a venda</b>. Ele caça formulário barato — e entrega exatamente isso. Falta ligar a venda de volta à campanha.
+  </div>
+  <div class="alert a-blue">
+    📈 <b>Últimos 7 dias — melhora real:</b> leads +16% (150→174), calls agendadas +50% (24→36), taxa de agendamento subiu de <b>16% → 20,7%</b>. Julho já mostra recuperação de CAC (R$357) e do ROAS (~6,4x).
+  </div>
+
+  <!-- ═══ KPIs DO ANO ═══ -->
+  <h2>Números do ano (jan–ago 2026)</h2>
+  <div class="grid g4">
+    <div class="kpi"><div class="lbl">Investido (Google)</div><div class="val">R$ 200k</div><div class="delta neu">~R$28,5k/mês</div></div>
+    <div class="kpi"><div class="lbl">Leads (CRM)</div><div class="val">2.574</div><div class="delta up">▲ vs. 2025</div></div>
+    <div class="kpi"><div class="lbl">Vendas fechadas</div><div class="val">~540</div><div class="delta neu">média ~75/mês</div></div>
+    <div class="kpi"><div class="lbl">Ticket médio</div><div class="val">R$ 2,3k</div><div class="delta up">estável</div></div>
+    <div class="kpi"><div class="lbl">CAC médio (Google)</div><div class="val">R$ 400</div><div class="delta down">▲ subiu no ano</div></div>
+    <div class="kpi"><div class="lbl">ROAS estimado</div><div class="val">~5,5x</div><div class="delta neu">4x (jun) → 6,4x (jul)</div></div>
+    <div class="kpi"><div class="lbl">Lead→venda (Google)</div><div class="val">9,7%</div><div class="delta neu">desde maio</div></div>
+    <div class="kpi"><div class="lbl">Melhor canal</div><div class="val">Indicação</div><div class="delta up">~28% conversão</div></div>
+  </div>
+  <div class="note">Vendas e ROAS do ano são estimados: faturamento de jul/ago está parcialmente sem lançamento no CRM. CAC = gasto Google ÷ vendas de origem Google no mês.</div>
+
+  <!-- ═══ FUNIL REAL ═══ -->
+  <h2>Funil real por mês — o que o Google Ads não te mostra</h2>
+  <div class="card">
+    <div class="chartbox tall"><canvas id="funilChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Funil Google: gasto → lead → call → venda → CAC → ROAS</h3>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Mês</th><th>Gasto Google*</th><th>Leads</th><th>Calls agend.</th><th>Vendas</th><th>Custo/lead</th><th>CAC (custo/venda)</th><th>ROAS**</th></tr></thead>
+      <tbody id="funilTable"></tbody>
+    </table>
+    </div>
+    <div class="note">* Gasto mensal aproximado da série temporal semanal do Google (rede de Pesquisa). ** ROAS = (vendas × R$2.300) ÷ gasto. Jan–abr: o CRM só registrava lead que já agendava call (por isso leads = calls); a partir de maio passou a capturar todo lead de formulário — por isso o "salto" de volume e a queda da taxa lead→call.</div>
+  </div>
+
+  <!-- ═══ EVOLUÇÃO SEMANAL ═══ -->
+  <h2>Evolução semanal — Google Ads</h2>
+  <div class="alert a-amber small">⚠️ <b>Anomalia detectada:</b> a taxa de conversão despencou de ~14% para <b>~2%</b> nas duas primeiras semanas de junho (01 e 08/jun) e depois se recuperou. Isso indica um problema pontual de rastreamento ou de campanha nesse período — vale investigar no histórico da conta o que mudou.</div>
+  <div class="card"><div class="chartbox"><canvas id="convChart"></canvas></div></div>
+  <div class="card"><div class="chartbox"><canvas id="custoConvChart"></canvas></div></div>
+
+  <!-- ═══ CANAIS ═══ -->
+  <h2>De onde vêm os leads (e o que vira venda) — desde maio</h2>
+  <div class="grid g2">
+    <div class="card"><div class="chartbox"><canvas id="canalChart"></canvas></div></div>
+    <div class="card">
+      <h3>Conversão lead → venda por canal</h3>
+      <table>
+        <thead><tr><th>Canal</th><th>Leads</th><th>Vendas</th><th>Taxa</th></tr></thead>
+        <tbody id="canalTable"></tbody>
+      </table>
+      <div class="note">Indicação converte 3–4x melhor que pago (lead quente). Instagram (orgânico/ViralOS) já converte acima do Google pago — falta escala. ⚠️ "origem" está fragmentada no CRM (indicação/indicacao/Indicação; google forms/google_forms) — precisa normalizar.</div>
+    </div>
+  </div>
+
+  <!-- ═══ CAMPANHAS ═══ -->
+  <h2>Campanhas</h2>
+  <div class="card"><div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Campanha</th><th>Status</th><th>Custo</th><th>Conversões*</th><th>Custo/conv.</th></tr></thead>
+      <tbody id="campTable"></tbody>
+    </table></div>
+    <div class="note">* "Conversões" aqui é a métrica do Google (formulários/eventos), não vendas reais do CRM. Note: <b>Fim de semana</b> (pausada) tinha o menor custo/conv (R$15,14) — vale reavaliar reativar. <b>[YT][LP]</b> a R$225/conv foi corretamente pausada.</div>
+  </div>
+
+  <!-- ═══ DESPERDÍCIO ═══ -->
+  <h2>Onde a verba está vazando</h2>
+  <div class="alert a-red">
+    🔴 <b>Broad match (correspondência ampla) domina o gasto.</b> Só a palavra <code>nutricionista online</code> em ampla consumiu <b>~R$121 mil</b> (mais da metade da verba de Pesquisa). Ampla + rastreamento fraco = o Google gasta onde quer. Migrar os termos que convertem para <b>frase/exata</b> e podar a ampla é a ação de maior impacto imediato.
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Termos que mais gastaram sem conversão registrada</h3>
+      <table>
+        <thead><tr><th>Termo pesquisado</th><th>Custo</th><th>Cliques</th></tr></thead>
+        <tbody id="wasteTable"></tbody>
+      </table>
+      <div class="note">Todos exportados com 0 conversão — reforça o problema de rastreamento. Muitos são busca local ("nutricionista [cidade]") e informacional ("como emagrecer", "tdee calculator").</div>
+    </div>
+    <div class="card">
+      <h3>Palavras negativas sugeridas</h3>
+      <p class="small muted">Adicionar como negativas para parar de pagar por quem não vai comprar:</p>
+      <div id="negs" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px"></div>
+      <h3 style="margin-top:18px">Por quê</h3>
+      <ul class="small">
+        <li><b>Convênio</b> (bradesco, amil, sulamerica, unimed): buscam nutri coberto pelo plano — não compram programa pago. CTR alto (12–13%), fit péssimo.</li>
+        <li><b>Grátis / informacional</b> (tdee calculator, como emagrecer, cardápio grátis): intenção de fazer-sozinho.</li>
+        <li><b>Apps concorrentes</b> (adaptwell, simple life, madmuscles): querem outro produto.</li>
+        <li><b>Emprego/curso/faculdade</b>: quem quer virar nutricionista, não contratar.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══ SEGMENTAÇÃO ═══ -->
+  <h2>Dispositivos, redes e público</h2>
+  <div class="grid g2">
+    <div class="card"><h3>Conversões por dispositivo</h3><div class="chartbox"><canvas id="devChart"></canvas></div>
+      <div class="note">92% do gasto em smartphones. Custo/conv similar entre celular (R$17,4) e desktop (R$18,1).</div></div>
+    <div class="card"><h3>Conversões por idade</h3><div class="chartbox"><canvas id="ageChart"></canvas></div>
+      <div class="note">Público pago concentra em 25–34 (37%) e 35–44 (27%). 67% homens. Atenção: o conteúdo orgânico (ViralOS) mira mulher 35–44 — há um descasamento de público entre pago e orgânico que vale alinhar.</div></div>
+  </div>
+  <div class="card"><h3>Impressões por hora do dia</h3><div class="chartbox"><canvas id="hourChart"></canvas></div>
+    <div class="note">Pico 9h–16h. Madrugada (0h–5h) some ~150k impressões/período com baixa intenção — candidato a ajuste de lance por horário.</div></div>
+
+  <!-- ═══ PARECER ═══ -->
+  <h2>Parecer & próximos passos</h2>
+  <div class="card">
+    <h3>O que melhorou vs. a última análise (Q1)</h3>
+    <ul>
+      <li>Julho recuperou eficiência: CAC caiu para R$357 e ROAS voltou para ~6,4x.</li>
+      <li>Taxa de agendamento de call subiu na última semana (16% → 20,7%).</li>
+      <li>Taxa de fechamento nas calls realizadas segue forte (69–91%) — o problema não é o closer, é a qualidade do lead que chega e agenda.</li>
+    </ul>
+    <h3>O que piorou / precisa de ação</h3>
+    <ul>
+      <li>Volume de lead disparou sem crescer venda → verba indo para lead de baixa intenção.</li>
+      <li>CAC subiu no meio do ano (pico em março: R$973/venda).</li>
+      <li>Broad match concentrando gasto sem rastreamento de venda.</li>
+      <li>Anomalia de conversão em início de junho (2%) não explicada.</li>
+    </ul>
+    <h3>Ações priorizadas (maior impacto primeiro)</h3>
+    <ol style="margin-left:20px">
+      <li style="margin:7px 0"><b>Fechar o loop de atribuição:</b> capturar <code>gclid</code> no formulário e importar as vendas do CRM de volta pro Google (conversão offline) → o algoritmo passa a otimizar por COMPRADOR, não por formulário.</li>
+      <li style="margin:7px 0"><b>Podar broad match</b> e subir os termos que convertem para frase/exata; adicionar a lista de negativas acima.</li>
+      <li style="margin:7px 0"><b>Normalizar os dados do CRM</b> (origem duplicada, faturamento pendente) pra dashboard e decisão pararem de mentir.</li>
+      <li style="margin:7px 0"><b>Investigar a anomalia de junho</b> no histórico de alterações da conta.</li>
+      <li style="margin:7px 0"><b>Testar reativar "Fim de semana"</b> (menor custo/conv histórico).</li>
+    </ol>
+    <div class="note">Consulte <code>METODO_TRAFEGO.md</code> no repositório para o passo a passo de como executar cada uma dessas ações você mesmo.</div>
+  </div>
+
+</div>
+
+<script>
+const BRL=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const C={accent:'#8b5cf6',green:'#10b981',red:'#ef4444',amber:'#f59e0b',blue:'#3b82f6',cyan:'#22d3ee',muted:'#94a3b8'};
+Chart.defaults.color='#94a3b8'; Chart.defaults.borderColor='#1f2937'; Chart.defaults.font.family="Segoe UI,system-ui,sans-serif";
+
+// ── Funil mensal (Google): gasto, leads, calls, vendas, CAC ──
+const funil=[
+  {mes:'Jan',gasto:18096,leads:162,calls:162,vendas:70},
+  {mes:'Fev',gasto:27311,leads:184,calls:184,vendas:73},
+  {mes:'Mar',gasto:31155,leads:137,calls:137,vendas:32},
+  {mes:'Abr',gasto:26494,leads:122,calls:122,vendas:53},
+  {mes:'Mai',gasto:31483,leads:459,calls:160,vendas:56},
+  {mes:'Jun',gasto:19663,leads:689,calls:112,vendas:38},
+  {mes:'Jul',gasto:24660,leads:651,calls:122,vendas:69},
+];
+const TICKET=2300;
+// tabela
+document.getElementById('funilTable').innerHTML=funil.map(r=>{
+  const cpl=r.gasto/r.leads, cac=r.gasto/r.vendas, roas=(r.vendas*TICKET)/r.gasto;
+  const roasCls=roas>=6?'up':roas>=4?'neu':'down';
+  const cacCls=cac<=350?'up':cac<=550?'neu':'down';
+  return `<tr><td><b>${r.mes}</b></td><td>${BRL(r.gasto)}</td><td>${r.leads}</td><td>${r.calls}</td><td>${r.vendas}</td><td>${BRL(cpl)}</td><td class="${cacCls}">${BRL(cac)}</td><td class="${roasCls}">${roas.toFixed(1)}x</td></tr>`;
+}).join('');
+// gráfico funil
+new Chart(funilChart,{data:{labels:funil.map(r=>r.mes),
+  datasets:[
+    {type:'bar',label:'Leads',data:funil.map(r=>r.leads),backgroundColor:'rgba(139,92,246,.35)',borderRadius:5,yAxisID:'y'},
+    {type:'bar',label:'Calls agendadas',data:funil.map(r=>r.calls),backgroundColor:'rgba(34,211,238,.6)',borderRadius:5,yAxisID:'y'},
+    {type:'bar',label:'Vendas',data:funil.map(r=>r.vendas),backgroundColor:C.green,borderRadius:5,yAxisID:'y'},
+    {type:'line',label:'CAC (R$/venda)',data:funil.map(r=>Math.round(r.gasto/r.vendas)),borderColor:C.red,backgroundColor:C.red,tension:.3,yAxisID:'y1',pointRadius:4}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{title:{display:true,text:'Leads triplicaram, mas vendas não — e o CAC (linha vermelha) subiu',color:'#e5e7eb',font:{size:13,weight:'bold'}},legend:{position:'bottom'}},
+    scales:{y:{title:{display:true,text:'quantidade'}},y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'CAC (R$)'}}}}});
+
+// ── Conversão semanal ──
+const semanas=['29/12','05/01','12/01','19/01','26/01','02/02','09/02','16/02','23/02','02/03','09/03','16/03','23/03','30/03','06/04','13/04','20/04','27/04','04/05','11/05','18/05','25/05','01/06','08/06','15/06','22/06','29/06','06/07','13/07','20/07','27/07','03/08'];
+const convRate=[13.39,12.22,14.34,12.52,10.27,10.77,12.08,12.73,12.93,13.96,13.83,11.95,12.10,14.11,14.41,14.78,14.53,14.83,14.47,13.51,13.72,14.44,1.99,1.91,8.54,12.14,9.88,13.67,14.91,14.03,12.35,17.21];
+const custoConv=[9.64,12.83,12.37,14.62,18.46,19.30,17.60,17.10,17.61,16.79,15.35,16.51,16.98,15.24,15.80,15.27,14.56,13.66,17.96,18.87,18.80,15.16,21.47,21.76,21.66,18.07,18.99,18.69,17.56,20.44,28.14,17.66];
+new Chart(convChart,{type:'line',data:{labels:semanas,datasets:[{label:'Taxa de conversão (%)',data:convRate,borderColor:C.cyan,backgroundColor:'rgba(34,211,238,.1)',fill:true,tension:.25,pointRadius:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Taxa de conversão semanal — note o mergulho no início de junho',color:'#e5e7eb',font:{size:13,weight:'bold'}},legend:{display:false}},scales:{y:{title:{display:true,text:'%'},beginAtZero:true}}}});
+new Chart(custoConvChart,{type:'line',data:{labels:semanas,datasets:[{label:'Custo por conversão (R$)',data:custoConv,borderColor:C.amber,backgroundColor:'rgba(245,158,11,.1)',fill:true,tension:.25,pointRadius:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Custo por conversão subiu de ~R$13 (jan) para ~R$20–28 (jul)',color:'#e5e7eb',font:{size:13,weight:'bold'}},legend:{display:false}},scales:{y:{title:{display:true,text:'R$'}}}}});
+
+// ── Canais ──
+const canais=[
+  {nome:'Google',leads:1878,vendas:181},
+  {nome:'Instagram',leads:79,vendas:9},
+  {nome:'Indicação',leads:74,vendas:21},
+  {nome:'Outro/Site',leads:21,vendas:1},
+];
+document.getElementById('canalTable').innerHTML=canais.map(c=>{
+  const t=(100*c.vendas/c.leads).toFixed(1);
+  const cls=t>=20?'up':t>=10?'neu':'down';
+  return `<tr><td><b>${c.nome}</b></td><td>${c.leads}</td><td>${c.vendas}</td><td class="${cls}">${t}%</td></tr>`;
+}).join('');
+new Chart(canalChart,{type:'doughnut',data:{labels:canais.map(c=>c.nome),datasets:[{data:canais.map(c=>c.leads),backgroundColor:[C.accent,C.red,C.green,C.muted],borderColor:'#131926',borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{title:{display:true,text:'Volume de leads por canal (Google = 88%)',color:'#e5e7eb',font:{size:13,weight:'bold'}},legend:{position:'bottom'}}}});
+
+// ── Campanhas ──
+const camps=[
+  {n:'[SEARCH] [F.FUNIL] [PRINCIPAL]',s:'on',c:117309,conv:6592,cc:17.79},
+  {n:'[SEARCH] [M.FUNIL]',s:'on',c:39651,conv:2197,cc:18.05},
+  {n:'Fim de semana',s:'off',c:25191,conv:1664,cc:15.14},
+  {n:'Display RMKT',s:'on',c:10543,conv:674,cc:15.64},
+  {n:'[SEARCH] [NORDESTE] Captação',s:'on',c:5344,conv:185,cc:28.81},
+  {n:'[Institucional] Fabricio Moura',s:'on',c:824,conv:53,cc:15.55},
+  {n:'[New] [Teste Rápido]',s:'off',c:545,conv:18,cc:30.29},
+  {n:'[YT] [LP] Captação',s:'off',c:450,conv:2,cc:225.32},
+];
+document.getElementById('campTable').innerHTML=camps.map(c=>{
+  const tag=c.s==='on'?'<span class="tag t-on">Ativado</span>':'<span class="tag t-off">Pausado</span>';
+  const ccCls=c.cc>50?'t-bad':c.cc>25?'t-warn':'';
+  return `<tr><td>${c.n}</td><td>${tag}</td><td>${BRL(c.c)}</td><td>${c.conv.toLocaleString('pt-BR')}</td><td><span class="tag ${ccCls}">R$ ${c.cc.toFixed(2)}</span></td></tr>`;
+}).join('');
+
+// ── Desperdício ──
+const waste=[
+  {t:'nutricionista (ampla)',c:6891,cl:1882},{t:'personal inteligente',c:2330,cl:1382},
+  {t:'nutricionista online',c:6812,cl:1299},{t:'nutricionista esportivo',c:3536,cl:791},
+  {t:'personal trainer',c:572,cl:270},{t:'como emagrecer rapido',c:237,cl:178},
+  {t:'tdee calculator',c:285,cl:173},{t:'adaptwell (app concorrente)',c:435,cl:143},
+  {t:'dieta emagrecer 10kg 7 dias',c:118,cl:90},
+];
+document.getElementById('wasteTable').innerHTML=waste.map(w=>`<tr><td>${w.t}</td><td>${BRL(w.c)}</td><td>${w.cl}</td></tr>`).join('');
+const negs=['bradesco','amil','sulamerica','unimed','convenio','plano de saude','grátis','gratuito','tdee calculator','como emagrecer','receita','cardápio grátis','vaga','emprego','salário','curso','faculdade','o que é','concurso','adaptwell','simple life','madmuscles'];
+document.getElementById('negs').innerHTML=negs.map(n=>`<span class="tag t-bad">${n}</span>`).join('');
+
+// ── Dispositivos ──
+new Chart(devChart,{type:'bar',data:{labels:['Smartphones','Computadores','Tablets','TV'],datasets:[{label:'Conversões',data:[9500,1849,37,0],backgroundColor:[C.accent,C.blue,C.cyan,C.muted],borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}}}});
+// ── Idade ──
+new Chart(ageChart,{type:'bar',data:{labels:['18-24','25-34','35-44','45-54','55-64','+65'],datasets:[{label:'% conversões',data:[20.36,36.83,27.10,12.94,2.26,0.65],backgroundColor:C.green,borderRadius:5}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{title:{display:true,text:'%'}}}}});
+// ── Hora ──
+const horas=[46903,32925,21597,15709,14039,25022,42156,67220,90597,110223,120173,123034,118516,119509,117550,115968,111612,97631,86823,81000,76304,56870,39625,26496];
+new Chart(hourChart,{type:'bar',data:{labels:[...Array(24).keys()].map(h=>h+'h'),datasets:[{label:'Impressões',data:horas,backgroundColor:horas.map((v,i)=>i>=9&&i<=16?C.accent:'rgba(139,92,246,.3)'),borderRadius:3}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+</script>
+</body>
+</html>
